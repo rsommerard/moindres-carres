@@ -1,50 +1,57 @@
-#!/usr/bin/env python2
+# -*- coding: utf8 -*-
 
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy
+from matplotlib import pyplot
 
-t = np.loadtxt("data/t.txt")
-print '-' * 80
-print 't = {0}'.format(t)
+def load_data():
+  global x, y, N, t, p
+  t = numpy.loadtxt('data/t.txt')
+  N = len(t)
+  x = numpy.vstack((t, numpy.ones(N)))
+  p = numpy.loadtxt('data/p.txt')
+  y = p
 
-p = np.loadtxt("data/p.txt")
-print '-' * 80
-print 'p = {0}'.format(p)
+def print_results():
+  print '-' * 80
+  print 'x = {0}'.format(x)
+  print '-' * 80
+  print 'y = {0}'.format(y)
+  print '-' * 80
+  print 'theta = {0}'.format(theta)
+  print '-' * 80
+  print 'f_theta = {0}'.format(f_theta)
+  print '-' * 80
+  print 'j_theta = {0}'.format(j_theta)
+  print '-' * 80
 
-N = len(t)
+def calcul_theta():
+  global theta
+  theta = numpy.dot(numpy.linalg.inv(numpy.dot(x, x.T)), numpy.dot(x, y))
 
-x = np.vstack((t, np.ones(N)))
-print '-' * 80
-print 'x = {0}'.format(x)
+def calcul_f_theta():
+  global f_theta
+  f_theta = numpy.dot(theta.T, x)
 
-y = p
-print '-' * 80
-print 'y = {0}'.format(y)
+def calcul_j_theta():
+  global j_theta
+  tmp = (y - numpy.dot(x.T, theta))
+  j_theta = ((1.0/N) * numpy.dot(tmp.T, tmp))
 
-#print np.dot(x, x.T)
+def print_graphs():
+  pyplot.plot(t, p, '.')
+  pyplot.plot(t, f_theta)
+  pyplot.ylabel('position (m)')
+  pyplot.xlabel('temps (s)')
+  pyplot.show()
 
-#print np.linalg.inv(np.dot(x, x.T))
+def main():
+  load_data()
+  calcul_theta()
+  calcul_f_theta()
+  calcul_j_theta()
+  print_results()
+  print_graphs()
 
-#print np.dot(x, y)
+if __name__ == '__main__':
+  main()
 
-O = np.dot(np.linalg.inv(np.dot(x, x.T)), np.dot(x, y))
-print '-' * 80
-print 'O = {0}'.format(O)
-
-fO = np.dot(O.T, x)
-print '-' * 80
-print 'fO = {0}'.format(fO)
-
-A = (y - np.dot(x.T, O))
-
-JO = ((1.0/N) * np.dot(A.T, A))
-print '-' * 80
-print 'JO = {0}'.format(JO)
-
-print '-' * 80
-
-plt.plot(t, p, '.')
-plt.plot(t, fO)
-plt.ylabel('position (m)')
-plt.xlabel('temps (s)')
-plt.show()
