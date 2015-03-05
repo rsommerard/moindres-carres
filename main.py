@@ -16,7 +16,7 @@ def load_data():
 
 def print_results():
   """
-    Calcul de l'erreur quadratique
+    Affiche les résultats.
   """
   print 'FAA - TP1: Moindres carrés'
   print '-' * 80
