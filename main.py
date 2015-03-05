@@ -4,6 +4,9 @@ import numpy
 from matplotlib import pyplot
 
 def load_data():
+  """
+    Charge les données des fichiers textes.
+  """
   global x, y, N, t, p
   t = numpy.loadtxt('data/t.txt')
   N = len(t)
@@ -12,38 +15,52 @@ def load_data():
   y = p
 
 def print_results():
+  """
+    Calcul de l'erreur quadratique
+  """
+  print 'FAA - TP1: Moindres carrés'
   print '-' * 80
-  print 'N = {0}'.format(N)
+  print 'Nombre de données: {0}'.format(N)
   print '-' * 80
-  print 'x = {0}'.format(x)
+  print 'Théta: {0}'.format(theta())
   print '-' * 80
-  print 'y = {0}'.format(y)
-  print '-' * 80
-  print 'theta = {0}'.format(theta())
-  print '-' * 80
-  print 'f_theta = {0}'.format(f_theta())
-  print '-' * 80
-  print 'j_theta = {0}'.format(j_theta())
+  print 'Erreur quadratique: {0}'.format(j_theta())
   print '-' * 80
 
 def theta():
+  """
+    Calcul théta par la méthode des moindres carrés pour x et y.
+  """
   return numpy.dot(numpy.linalg.inv(numpy.dot(x, x.T)), numpy.dot(x, y))
 
 def f_theta():
+  """
+    Calcul le y pour les x en fonction de théta.
+  """
   return numpy.dot(theta().T, x)
 
 def j_theta():
+  """
+    Calcul de l'erreur quadratique.
+  """
   tmp = (y - numpy.dot(x.T, theta()))
   return ((1.0/N) * numpy.dot(tmp.T, tmp))
 
 def print_graphs():
-  pyplot.plot(t, p, '.')
-  pyplot.plot(t, f_theta())
+  """
+    Affiche les données sur le graph.
+  """
+  pyplot.plot(t, p, '.', label='data')
+  pyplot.plot(t, f_theta(), label='f(x)')
   pyplot.ylabel('position (m)')
   pyplot.xlabel('temps (s)')
+  pyplot.legend()
   pyplot.show()
 
 def main():
+  """
+    Fonction principale du programme.
+  """
   load_data()
   print_results()
   print_graphs()
