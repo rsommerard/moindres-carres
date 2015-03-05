@@ -54,6 +54,7 @@ def print_graphs():
   pyplot.plot(t, f_theta(), label='f(x)')
   pyplot.ylabel('position (m)')
   pyplot.xlabel('temps (s)')
+  pyplot.grid(True)
   pyplot.legend()
   pyplot.show()
 
